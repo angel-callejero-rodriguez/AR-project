@@ -1,56 +1,232 @@
-body { margin: 0; font-family: "Segoe UI", Helvetica, Arial, sans-serif; background-color: #f9f9f9; color: #111; }
+/* Importar uma fonte limpa e corporativa (Inter) da Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
 
-.product-container { display: flex; max-width: 1000px; margin: 50px auto; background: #fff; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-.product-photo { width: 50%; object-fit: cover; }
-.product-info { width: 50%; padding: 0 40px; display: flex; flex-direction: column; justify-content: center; }
-.brand { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #888; }
-h1 { font-weight: 300; font-size: 32px; margin: 10px 0; }
-.price { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
-.description { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 30px; }
+body { 
+    margin: 0; 
+    font-family: 'Inter', sans-serif; 
+    background-color: #f7f7f7; 
+    color: #1a1a1a; 
+    -webkit-font-smoothing: antialiased;
+}
 
-.btn-ar { background: #111; color: #fff; border: none; padding: 16px 20px; font-size: 13px; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: 0.2s; margin-bottom: 10px; }
-.btn-ar:hover { background: #3b82f6; }
-.btn-comprar { background: #fff; color: #111; border: 1px solid #111; padding: 16px 20px; font-size: 13px; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: 0.2s; }
-.btn-comprar:hover { background: #f0f0f0; }
+/* Layout da Loja */
+.product-container { 
+    display: flex; 
+    max-width: 1050px; 
+    margin: 60px auto; 
+    background: #fff; 
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+    overflow: hidden;
+}
 
+.photo-wrapper {
+    width: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-photo { 
+    width: 100%; 
+    height: 100%;
+    object-fit: cover; 
+}
+
+.product-info { 
+    width: 50%; 
+    padding: 60px 50px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+.brand { 
+    font-size: 11px; 
+    font-weight: 600;
+    letter-spacing: 2px; 
+    text-transform: uppercase; 
+    color: #737373; 
+    margin-bottom: 8px;
+}
+
+h1 { 
+    font-weight: 400; 
+    font-size: 32px; 
+    margin: 0 0 15px 0; 
+    color: #111;
+}
+
+.price { 
+    font-size: 20px; 
+    font-weight: 600; 
+    margin: 0 0 25px 0; 
+}
+
+.description { 
+    font-size: 14px; 
+    color: #5c5c5c; 
+    line-height: 1.6; 
+    margin: 0 0 40px 0; 
+}
+
+/* Botões da Loja (Design Corporativo) */
+.btn-primary { 
+    background: #000; 
+    color: #fff; 
+    border: none; 
+    padding: 18px 24px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    letter-spacing: 1.5px; 
+    text-transform: uppercase;
+    cursor: pointer; 
+    transition: background-color 0.2s; 
+    margin-bottom: 12px; 
+    border-radius: 2px;
+}
+
+.btn-primary:hover { background: #333; }
+
+.btn-secondary { 
+    background: transparent; 
+    color: #000; 
+    border: 1px solid #d4d4d4; 
+    padding: 18px 24px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    letter-spacing: 1.5px; 
+    text-transform: uppercase;
+    cursor: pointer; 
+    transition: border-color 0.2s; 
+    border-radius: 2px;
+}
+
+.btn-secondary:hover { border-color: #000; }
+
+/* --- A JANELA POP-UP (MODAL) --- */
 .escondido { display: none !important; }
 
-#modal-3d { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.9); z-index: 100; display: flex; justify-content: center; align-items: center; }
-.modal-content { width: 90vw; height: 85vh; background: #fff; position: relative; }
-
-model-viewer { width: 100%; height: 100%; background-color: #f4f4f4; }
-.fechar-modal { position: absolute; top: 15px; right: 15px; background: #111; color: #fff; border: none; padding: 10px 15px; font-size: 12px; cursor: pointer; z-index: 1000; }
-.fechar-modal:hover { background: #dc2626; }
-
-#btn-qr-desktop {
-    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-    z-index: 1000; background: #111; color: #fff; border: 2px solid #fff; 
-    padding: 14px 28px; font-size: 14px; font-weight: bold; border-radius: 30px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); cursor: pointer; letter-spacing: 1px; transition: 0.2s;
+#modal-3d { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh; 
+    background: rgba(0, 0, 0, 0.95); 
+    z-index: 100; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
-#btn-qr-desktop:hover { background: #3b82f6; border-color: #3b82f6; }
 
-/* O DESIGN DA NOSSA JANELA DE QR CODE (SUPER PROFISSIONAL) */
+.modal-content { 
+    width: 95vw; 
+    height: 90vh; 
+    background: #fff; 
+    position: relative; 
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+model-viewer { 
+    width: 100%; 
+    height: 100%; 
+    background-color: #fafafa; 
+}
+
+.fechar-modal { 
+    position: absolute; 
+    top: 20px; 
+    right: 20px; 
+    background: transparent; 
+    color: #000; 
+    border: none; 
+    padding: 10px; 
+    font-size: 11px; 
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    cursor: pointer; 
+    z-index: 1000; 
+}
+
+.fechar-modal:hover { color: #666; }
+
+/* --- BOTÃO FLUTUANTE (VER NO SMARTPHONE) --- */
+.btn-floating {
+    position: absolute; 
+    bottom: 40px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    z-index: 1000; 
+    background: #fff; 
+    color: #000; 
+    border: none;
+    padding: 16px 32px; 
+    font-size: 12px; 
+    font-weight: 600; 
+    border-radius: 40px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+    cursor: pointer; 
+    letter-spacing: 1px; 
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-floating:hover { 
+    transform: translateX(-50%) scale(1.02);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* --- POP-UP DO QR CODE (Corporate Premium) --- */
 #qr-popup {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     background: #fff;
-    padding: 30px;
-    border-radius: 12px;
+    padding: 40px 30px;
+    border-radius: 8px;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
     z-index: 2000;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    width: 280px;
+    width: 300px;
 }
-#qr-popup h2 { margin: 0; font-size: 18px; font-weight: bold; color: #111;}
-#qr-popup p { margin: 0; font-size: 13px; color: #666; line-height: 1.5; }
-#btn-fechar-qr {
-    background: #f0f0f0; color: #111; border: 1px solid #ccc; padding: 10px 20px;
-    font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 5px; transition: 0.2s;
+
+#qr-popup h2 { 
+    margin: 0; 
+    font-size: 15px; 
+    font-weight: 600; 
+    color: #000;
+    letter-spacing: 1px;
 }
-#btn-fechar-qr:hover { background: #111; color: #fff; }
+
+#qr-popup p { 
+    margin: 0; 
+    font-size: 13px; 
+    color: #5c5c5c; 
+    line-height: 1.5; 
+}
+
+#qr-image {
+    margin: 15px 0;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.btn-text {
+    background: transparent; 
+    color: #737373; 
+    border: none; 
+    padding: 8px 16px;
+    font-size: 12px; 
+    font-weight: 400; 
+    cursor: pointer; 
+    margin-top: 5px; 
+    transition: color 0.2s;
+    text-decoration: underline;
+}
+
+.btn-text:hover { color: #000; }
