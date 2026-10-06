@@ -3,59 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofá Nórdico - Loja Demonstração</title>
+    <title>Cadeira Wayfair - Coleção Exclusiva</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Importar o Motor 3D/AR da Google -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
     <!-- A PÁGINA DA LOJA ONLINE -->
     <div class="product-container">
-        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sofá" class="product-photo">
+        <!-- Imagem estática realista da cadeira (render) -->
+        <div class="photo-wrapper">
+            <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cadeira de Design" class="product-photo">
+        </div>
+        
         <div class="product-info">
-            <span class="brand">Nova Coleção</span>
-            <h1>Sofá Nórdico Minimalista</h1>
-            <p class="price">1.250,00 €</p>
-            <p class="description">Um design elegante em tecido premium. Perfeito para salas de estar modernas. Verifique se o tamanho é adequado para a sua sala utilizando a nossa tecnologia de Realidade Aumentada.</p>
-            <button id="btn-abrir-3d" class="btn-ar">VER NO MEU ESPAÇO (3D & AR)</button>
-            <button class="btn-comprar">ADICIONAR AO CARRINHO</button>
+            <span class="brand">Wayfair Exclusive</span>
+            <h1>Cadeira de Lounge Moderna</h1>
+            <p class="price">450,00 €</p>
+            <p class="description">Construída com materiais premium e foco na ergonomia. Utilize a visualização em Realidade Aumentada para verificar como as proporções e os materiais se integram no seu espaço antes de encomendar.</p>
+            
+            <button id="btn-abrir-3d" class="btn-primary">VISUALIZAR EM 3D E AR</button>
+            <button class="btn-secondary">ADICIONAR AO CARRINHO</button>
         </div>
     </div>
 
     <!-- A JANELA POP-UP COM O 3D -->
     <div id="modal-3d" class="escondido">
         <div class="modal-content">
-            <button id="btn-fechar-3d" class="fechar-modal">FECHAR ✕</button>
+            <button id="btn-fechar-3d" class="fechar-modal">FECHAR</button>
             
-            <!-- O NOSSO NOVO POP-UP DE QR CODE PERSONALIZADO (Escondido no início) -->
+            <!-- POP-UP DO QR CODE CORPORATIVO -->
             <div id="qr-popup" class="escondido">
-                <h2>VER NA SUA SALA (AR)</h2>
-                <p>Aponte a câmara do seu telemóvel para visualizar o sofá em tamanho real.</p>
-                <!-- Gerador de QR Code com link de demonstração -->
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://ar-project-two-orpin.vercel.app/" alt="QR Code">
-                <button id="btn-fechar-qr">VOLTAR AO 3D</button>
+                <h2>VISUALIZAÇÃO NO ESPAÇO (AR)</h2>
+                <p>Leia o código abaixo com a câmara do seu smartphone para colocar o objeto diretamente na sua sala.</p>
+                <!-- A imagem do QR será injetada aqui via JavaScript -->
+                <img id="qr-image" src="" alt="Código QR">
+                <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
             </div>
 
-            <!-- O BOTÃO PRETO EM BAIXO -->
-            <button id="btn-qr-desktop">
-                📱 VER NO TELEMÓVEL (QR CODE)
+            <!-- BOTÃO PARA ATIVAR O QR CODE -->
+            <button id="btn-qr-desktop" class="btn-floating">
+                VER NO SMARTPHONE
             </button>
             
+            <!-- O Motor 3D (Agora com a cadeira hiper-otimizada oficial) -->
             <model-viewer 
-                id="meu-sofa"
-                src="sofa.glb" 
+                id="meu-modelo"
+                src="https://modelviewer.dev/shared-assets/models/Chair.glb" 
                 ar 
                 ar-modes="webxr scene-viewer quick-look" 
                 camera-controls 
-                shadow-intensity="1.5"
+                shadow-intensity="1"
                 environment-image="neutral"
                 auto-rotate
-                alt="Modelo 3D do Sofá">
+                alt="Modelo 3D da Cadeira">
             </model-viewer>
         </div>
     </div>
 
-    <!-- JAVASCRIPT: Ligar os botões todos -->
+    <!-- JAVASCRIPT: Lógica do QR Code Direto para AR -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
@@ -64,27 +72,42 @@
         const btnQrDesktop = document.getElementById('btn-qr-desktop');
         const qrPopup = document.getElementById('qr-popup');
         const btnFecharQr = document.getElementById('btn-fechar-qr');
+        const qrImage = document.getElementById('qr-image');
 
-        // Abrir janela 3D
         btnAbrir.addEventListener('click', () => {
             modal.classList.remove('escondido');
         });
 
-        // Fechar janela 3D
         btnFechar.addEventListener('click', () => {
             modal.classList.add('escondido');
-            qrPopup.classList.add('escondido'); // Esconde o QR se estiver aberto
+            qrPopup.classList.add('escondido'); 
         });
 
-        // Mostrar o nosso QR Code
+        // Quando clica para ver o QR Code
         btnQrDesktop.addEventListener('click', () => {
             qrPopup.classList.remove('escondido'); 
+            
+            // O Truque do "Intent URL". 
+            // Este link manda o sistema Android (SceneViewer) ou o link direto do ficheiro para forçar a abertura.
+            const urlFicheiro = "https://modelviewer.dev/shared-assets/models/Chair.glb";
+            
+            // Um fallback para Android nativo forçar o Scene Viewer. 
+            // No iOS, se ele abrir a página num browser que não suporta o AR nativo, o model-viewer toma conta.
+            // A forma mais fiável para forçar a câmara direta através de um QR code num cenário de demonstração 
+            // é apontar para uma página dedicada apenas ao modelo em ecrã inteiro.
+            
+            // Para simplificar a tua demonstração de forma universal sem falhas (iOS e Android), 
+            // vamos apontar para a página oficial do modelviewer que foca APENAS no AR (sem botões extra).
+            const linkAR = "https://modelviewer.dev/examples/augmentedreality.html";
+            
+            // Atualiza a imagem do QR Code
+            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(linkAR)}`;
         });
 
-        // Esconder só o QR Code
         btnFecharQr.addEventListener('click', () => {
             qrPopup.classList.add('escondido');
         });
     </script>
 </body>
 </html>
+
