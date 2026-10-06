@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofá Nórdico - Loja Demonstração</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+<body>
+
+    <!-- A PÁGINA DA LOJA ONLINE -->
+    <div class="product-container">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sofá" class="product-photo">
+        <div class="product-info">
+            <span class="brand">Nova Coleção</span>
+            <h1>Sofá Nórdico Minimalista</h1>
+            <p class="price">1.250,00 €</p>
+            <p class="description">Um design elegante em tecido premium. Perfeito para salas de estar modernas. Verifique se o tamanho é adequado para a sua sala utilizando a nossa tecnologia de Realidade Aumentada.</p>
+            <button id="btn-abrir-3d" class="btn-ar">VER NO MEU ESPAÇO (3D & AR)</button>
+            <button class="btn-comprar">ADICIONAR AO CARRINHO</button>
+        </div>
+    </div>
+
+    <!-- A JANELA POP-UP COM O 3D -->
+    <div id="modal-3d" class="escondido">
+        <div class="modal-content">
+            <button id="btn-fechar-3d" class="fechar-modal">FECHAR ✕</button>
+            
+            <!-- O NOSSO NOVO POP-UP DE QR CODE PERSONALIZADO (Escondido no início) -->
+            <div id="qr-popup" class="escondido">
+                <h2>VER NA SUA SALA (AR)</h2>
+                <p>Aponte a câmara do seu telemóvel para visualizar o sofá em tamanho real.</p>
+                <!-- Gerador de QR Code com link de demonstração -->
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://modelviewer.dev/" alt="QR Code">
+                <button id="btn-fechar-qr">VOLTAR AO 3D</button>
+            </div>
+
+            <!-- O BOTÃO PRETO EM BAIXO -->
+            <button id="btn-qr-desktop">
+                📱 VER NO TELEMÓVEL (QR CODE)
+            </button>
+            
+            <model-viewer 
+                id="meu-sofa"
+                src="sofa.glb" 
+                ar 
+                ar-modes="webxr scene-viewer quick-look" 
+                camera-controls 
+                shadow-intensity="1.5"
+                environment-image="neutral"
+                auto-rotate
+                alt="Modelo 3D do Sofá">
+            </model-viewer>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: Ligar os botões todos -->
+    <script>
+        const btnAbrir = document.getElementById('btn-abrir-3d');
+        const btnFechar = document.getElementById('btn-fechar-3d');
+        const modal = document.getElementById('modal-3d');
+        
+        const btnQrDesktop = document.getElementById('btn-qr-desktop');
+        const qrPopup = document.getElementById('qr-popup');
+        const btnFecharQr = document.getElementById('btn-fechar-qr');
+
+        // Abrir janela 3D
+        btnAbrir.addEventListener('click', () => {
+            modal.classList.remove('escondido');
+        });
+
+        // Fechar janela 3D
+        btnFechar.addEventListener('click', () => {
+            modal.classList.add('escondido');
+            qrPopup.classList.add('escondido'); // Esconde o QR se estiver aberto
+        });
+
+        // Mostrar o nosso QR Code
+        btnQrDesktop.addEventListener('click', () => {
+            qrPopup.classList.remove('escondido'); 
+        });
+
+        // Esconder só o QR Code
+        btnFecharQr.addEventListener('click', () => {
+            qrPopup.classList.add('escondido');
+        });
+    </script>
+</body>
+</html>
