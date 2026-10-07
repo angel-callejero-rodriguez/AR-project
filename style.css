@@ -25,7 +25,7 @@ h1 { font-family: 'Playfair Display', serif; font-weight: 600; font-size: 34px; 
 #modal-3d { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.95); z-index: 100; display: flex; justify-content: center; align-items: center; }
 .modal-content { width: 95vw; height: 90vh; background: #fff; position: relative; border-radius: 6px; overflow: hidden; }
 
-/* O FUNDO DO 3D MUDOU PARA CINZENTO AQUI */
+/* O Fundo Cinzento (Estúdio) do modelo 3D */
 model-viewer { width: 100%; height: 100%; background-color: #e5e7eb; }
 
 .fechar-modal { position: absolute; top: 20px; right: 20px; background: transparent; color: #000; border: none; padding: 10px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; cursor: pointer; z-index: 1000; }
@@ -33,25 +33,6 @@ model-viewer { width: 100%; height: 100%; background-color: #e5e7eb; }
 
 .btn-floating { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 1000; background: #fff; color: #000; border: none; padding: 16px 32px; font-size: 12px; font-weight: 600; border-radius: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); cursor: pointer; letter-spacing: 1px; transition: transform 0.2s, box-shadow 0.2s; }
 .btn-floating:hover { transform: translateX(-50%) scale(1.02); box-shadow: 0 6px 16px rgba(0,0,0,0.2); }
-
-/* Botão de AR para Telemóvel (Simples e Elegante) */
-#btn-ar-nativo {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #000;
-    color: #fff;
-    border: none;
-    padding: 14px 28px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    border-radius: 40px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-}
 
 @media (max-width: 768px) {
     .btn-floating { display: none !important; }
