@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loja Exemplo - Cadeira Vintage</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Importar o Motor 3D/AR Estável -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <!-- CABEÇALHO DA LOJA -->
+    <!-- CABEÇALHO -->
     <header class="store-header">
         <div class="logo">Loja Exemplo.</div>
     </header>
 
-    <!-- PÁGINA DA LOJA ONLINE -->
+    <!-- PÁGINA DA LOJA -->
     <div class="product-container">
         <div class="photo-wrapper">
             <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" alt="Cadeira Amarela" class="product-photo">
@@ -26,7 +28,7 @@
             <p class="price">450,00 €</p>
             <p class="description">Um design intemporal com tecido premium e pernas em madeira de nogueira. Utilize a visualização em Realidade Aumentada para verificar como as proporções e o tecido se integram no seu espaço antes de encomendar.</p>
             
-            <button id="btn-abrir-3d" class="btn-primary">VER NO MEU ESPAÇO</button>
+            <button id="btn-abrir-3d" class="btn-primary">VER EM 3D</button>
             <button class="btn-secondary">ADICIONAR AO CARRINHO</button>
         </div>
     </div>
@@ -36,40 +38,40 @@
         <div class="modal-content">
             <button id="btn-fechar-3d" class="fechar-modal">FECHAR</button>
             
-            <!-- POP-UP DO QR CODE (PC) -->
+            <!-- POP-UP DO QR CODE (SÓ VISTO NO PC) -->
             <div id="qr-popup" class="escondido">
                 <h2>VISUALIZAÇÃO NO ESPAÇO (AR)</h2>
-                <p>Leia o código abaixo com a câmara do seu smartphone para colocar o objeto diretamente na sua sala.</p>
+                <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala.</p>
                 <img id="qr-image" src="" alt="Código QR">
                 <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
             </div>
 
-            <!-- BOTÃO PARA ABRIR O QR CODE (SÓ APARECE NO PC) -->
+            <!-- BOTÃO PARA ATIVAR O QR CODE -->
             <button id="btn-qr-desktop" class="btn-floating">
                 VER NO SMARTPHONE
             </button>
             
-            <!-- O MOTOR 3D -->
+            <!-- O MOTOR 3D ESTÁVEL -->
             <model-viewer 
                 id="meu-modelo"
                 src="https://modelviewer.dev/shared-assets/models/Chair.glb" 
                 ar 
                 ar-modes="webxr scene-viewer quick-look" 
                 camera-controls 
-                shadow-intensity="1.2"
+                shadow-intensity="1.5"
                 environment-image="neutral"
                 auto-rotate
                 alt="Modelo 3D da Cadeira">
                 
-                <!-- O NOVO BOTÃO DE AR NATIVO (Aparece se abrir site direto no telemóvel) -->
+                <!-- O botão nativo para quem abre no telemóvel -->
                 <button slot="ar-button" id="btn-ar-nativo">
-                    VER NO MEU ESPAÇO ➔
+                    VER NO MEU ESPAÇO
                 </button>
             </model-viewer>
         </div>
     </div>
 
-    <!-- LÓGICA JAVASCRIPT -->
+    <!-- JAVASCRIPT: Lógica de Deteção de Telemóvel -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
@@ -79,8 +81,8 @@
         const qrPopup = document.getElementById('qr-popup');
         const btnFecharQr = document.getElementById('btn-fechar-qr');
         const qrImage = document.getElementById('qr-image');
-        const modelo3D = document.getElementById('meu-modelo');
 
+        // Navegação básica PC
         btnAbrir.addEventListener('click', () => modal.classList.remove('escondido'));
         
         btnFechar.addEventListener('click', () => {
@@ -90,37 +92,38 @@
         
         btnFecharQr.addEventListener('click', () => qrPopup.classList.add('escondido'));
 
-        // Lógica do botão QR no PC
+        // LÓGICA DO QR CODE (Manda a "Palavra-Passe" para o telemóvel)
         btnQrDesktop.addEventListener('click', () => {
             qrPopup.classList.remove('escondido'); 
-            const linkTelemovel = window.location.origin + window.location.pathname + "?abrirAR=true";
+            
+            // Cria um link limpo e adiciona a tag secreta "?ar=true"
+            const urlLimpa = window.location.origin + window.location.pathname;
+            const linkTelemovel = urlLimpa + "?ar=true";
+            
             qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(linkTelemovel)}`;
         });
 
-        // Lógica se for aberto através do QR Code
+        // LÓGICA DO TELEMÓVEL (Quando a pessoa lê o QR Code)
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             
-            if (params.get('abrirAR') === 'true') {
+            // Se o site detetar que veio pelo QR Code:
+            if (params.get('ar') === 'true') {
+                
+                // 1. Esconde a página da loja toda
                 document.querySelector('.store-header').style.display = 'none';
                 document.querySelector('.product-container').style.display = 'none';
+                
+                // 2. Abre logo a janela cinzenta do 3D
                 modal.classList.remove('escondido');
-                btnFechar.style.display = 'none';
+                
+                // 3. Esconde forçosamente a janela e o botão do QR Code
+                qrPopup.classList.add('escondido');
                 btnQrDesktop.style.display = 'none';
-                modelo3D.style.opacity = "0.2"; // Fundo transparente
+                btnFechar.style.display = 'none';
                 
-                // Botão Gigante (Sem emojis, hiper profissional)
-                const btnIniciarCamara = document.createElement('button');
-                btnIniciarCamara.innerHTML = "INICIAR CÂMARA ➔";
-                btnIniciarCamara.style.cssText = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px 40px; font-size: 14px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.15); font-family: inherit; letter-spacing: 1.5px; text-transform: uppercase;";
-                
-                modal.appendChild(btnIniciarCamara);
-
-                btnIniciarCamara.addEventListener('click', () => {
-                    btnIniciarCamara.style.display = 'none'; 
-                    modelo3D.style.opacity = "1"; 
-                    modelo3D.activateAR(); 
-                });
+                // Ficas com um ecrã 100% imersivo e limpo, apenas com o modelo 3D
+                // e o botão "VER NO MEU ESPAÇO" no fundo, pronto a clicar sem erros!
             }
         });
     </script>
