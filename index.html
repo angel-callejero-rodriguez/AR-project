@@ -3,35 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadeira Design - Coleção Exclusiva</title>
+    <title>Loja Exemplo - Cadeira Vintage</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <!-- A PÁGINA DA LOJA ONLINE -->
+    <!-- CABEÇALHO DA LOJA -->
+    <header class="store-header">
+        <div class="logo">Loja Exemplo.</div>
+    </header>
+
+    <!-- PÁGINA DA LOJA ONLINE -->
     <div class="product-container">
         <div class="photo-wrapper">
-            <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cadeira de Design" class="product-photo">
+            <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" alt="Cadeira Amarela" class="product-photo">
         </div>
         
         <div class="product-info">
             <span class="brand">Coleção Exclusiva</span>
-            <h1>Cadeira de Lounge Moderna</h1>
+            <h1>Cadeira Vintage Mostarda</h1>
             <p class="price">450,00 €</p>
-            <p class="description">Construída com materiais premium e foco na ergonomia. Utilize a visualização em Realidade Aumentada para verificar como as proporções e os materiais se integram no seu espaço antes de encomendar.</p>
+            <p class="description">Um design intemporal com tecido premium e pernas em madeira de nogueira. Utilize a visualização em Realidade Aumentada para verificar como as proporções e o tecido se integram no seu espaço antes de encomendar.</p>
             
-            <button id="btn-abrir-3d" class="btn-primary">VISUALIZAR EM 3D E AR</button>
+            <button id="btn-abrir-3d" class="btn-primary">VER NO MEU ESPAÇO</button>
             <button class="btn-secondary">ADICIONAR AO CARRINHO</button>
         </div>
     </div>
 
-    <!-- A JANELA POP-UP COM O 3D -->
+    <!-- JANELA POP-UP COM O 3D -->
     <div id="modal-3d" class="escondido">
         <div class="modal-content">
             <button id="btn-fechar-3d" class="fechar-modal">FECHAR</button>
             
-            <!-- POP-UP DO QR CODE -->
+            <!-- POP-UP DO QR CODE (PC) -->
             <div id="qr-popup" class="escondido">
                 <h2>VISUALIZAÇÃO NO ESPAÇO (AR)</h2>
                 <p>Leia o código abaixo com a câmara do seu smartphone para colocar o objeto diretamente na sua sala.</p>
@@ -39,27 +44,32 @@
                 <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
             </div>
 
-            <!-- BOTÃO PARA ATIVAR O QR CODE NO PC -->
+            <!-- BOTÃO PARA ABRIR O QR CODE (SÓ APARECE NO PC) -->
             <button id="btn-qr-desktop" class="btn-floating">
                 VER NO SMARTPHONE
             </button>
             
-            <!-- O Motor 3D (Cadeira Realista e Segura via CDN) -->
+            <!-- O MOTOR 3D -->
             <model-viewer 
                 id="meu-modelo"
-                src="https://cdn.jsdelivr.net/gh/KhronosGroup/glTF-Sample-Models/2.0/SheenChair/glTF-Binary/SheenChair.glb" 
+                src="https://modelviewer.dev/shared-assets/models/Chair.glb" 
                 ar 
                 ar-modes="webxr scene-viewer quick-look" 
                 camera-controls 
-                shadow-intensity="1"
+                shadow-intensity="1.2"
                 environment-image="neutral"
                 auto-rotate
                 alt="Modelo 3D da Cadeira">
+                
+                <!-- O NOVO BOTÃO DE AR NATIVO (Aparece se abrir site direto no telemóvel) -->
+                <button slot="ar-button" id="btn-ar-nativo">
+                    VER NO MEU ESPAÇO ➔
+                </button>
             </model-viewer>
         </div>
     </div>
 
-    <!-- JAVASCRIPT: A Lógica Inteligente -->
+    <!-- LÓGICA JAVASCRIPT -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
@@ -71,7 +81,6 @@
         const qrImage = document.getElementById('qr-image');
         const modelo3D = document.getElementById('meu-modelo');
 
-        // Navegação Básica do PC
         btnAbrir.addEventListener('click', () => modal.classList.remove('escondido'));
         
         btnFechar.addEventListener('click', () => {
@@ -81,49 +90,36 @@
         
         btnFecharQr.addEventListener('click', () => qrPopup.classList.add('escondido'));
 
-        // LÓGICA 1: Gerar o QR Code para o TEU PRÓPRIO SITE
+        // Lógica do botão QR no PC
         btnQrDesktop.addEventListener('click', () => {
             qrPopup.classList.remove('escondido'); 
-            
-            // Pega no link do teu Vercel e adiciona o código secreto "?abrirAR=true"
             const linkTelemovel = window.location.origin + window.location.pathname + "?abrirAR=true";
-            
-            // Gera a imagem do QR Code
             qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(linkTelemovel)}`;
         });
 
-        // LÓGICA 2: A Magia quando a pessoa abre no telemóvel
+        // Lógica se for aberto através do QR Code
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             
-            // Se o site detetar que foi aberto através do QR Code:
             if (params.get('abrirAR') === 'true') {
-                
-                // 1. Esconde a loja de fundo para ficar limpo
+                document.querySelector('.store-header').style.display = 'none';
                 document.querySelector('.product-container').style.display = 'none';
-                
-                // 2. Abre a janela do 3D imediatamente
                 modal.classList.remove('escondido');
-                
-                // 3. Esconde os botões normais de PC
                 btnFechar.style.display = 'none';
                 btnQrDesktop.style.display = 'none';
+                modelo3D.style.opacity = "0.2"; // Fundo transparente
                 
-                // 4. Deixa a cadeira transparente para focar a atenção
-                modelo3D.style.opacity = "0.2";
-                
-                // 5. Cria o Botão Gigante de INICIAR CÂMARA
+                // Botão Gigante (Sem emojis, hiper profissional)
                 const btnIniciarCamara = document.createElement('button');
-                btnIniciarCamara.innerHTML = "📸 INICIAR CÂMARA (AR)";
-                btnIniciarCamara.style.cssText = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px 40px; font-size: 16px; font-weight: bold; background: #000; color: #fff; border: none; border-radius: 50px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: inherit; letter-spacing: 1px;";
+                btnIniciarCamara.innerHTML = "INICIAR CÂMARA ➔";
+                btnIniciarCamara.style.cssText = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px 40px; font-size: 14px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.15); font-family: inherit; letter-spacing: 1.5px; text-transform: uppercase;";
                 
                 modal.appendChild(btnIniciarCamara);
 
-                // 6. Quando o utilizador toca no botão, a câmara abre!
                 btnIniciarCamara.addEventListener('click', () => {
-                    btnIniciarCamara.style.display = 'none'; // Esconde o botão
-                    modelo3D.style.opacity = "1"; // Cadeira volta ao normal
-                    modelo3D.activateAR(); // Dá a ordem ao telemóvel para abrir a câmara
+                    btnIniciarCamara.style.display = 'none'; 
+                    modelo3D.style.opacity = "1"; 
+                    modelo3D.activateAR(); 
                 });
             }
         });
