@@ -1,46 +1,102 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AR-project</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Loja de Móveis - Produto</title>
     
-    <!-- O Script Oficial da Google para ler o 3D (necessário para funcionar no PC e Android) -->
+    <!-- Mantém a tua folha de estilos original -->
+    <link rel="stylesheet" href="style.css"> 
+    
+    <!-- Script Oficial da Google para ler o 3D -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    
+    <!-- CSS adicionado para garantir que a página de produto fica bonita e os botões funcionam -->
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        
+        /* Layout do Produto */
+        .product-container { display: flex; max-width: 900px; margin: 20px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 30px; }
+        .product-image { flex: 1; min-width: 300px; display: flex; align-items: center; justify-content: center; }
+        .product-image img { max-width: 100%; border-radius: 8px; }
+        .product-details { flex: 1; min-width: 300px; display: flex; flex-direction: column; justify-content: center; }
+        .product-title { font-size: 28px; margin-bottom: 10px; color: #333; }
+        .price { font-size: 24px; color: #e67e22; font-weight: bold; margin-bottom: 20px; }
+        .description { font-size: 16px; color: #666; line-height: 1.6; margin-bottom: 30px; }
+        
+        /* Botões */
+        .buttons { display: flex; gap: 15px; flex-wrap: wrap; }
+        .btn { padding: 15px 25px; border: none; cursor: pointer; border-radius: 5px; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .btn-cart { background-color: #2c3e50; color: white; flex: 1; }
+        .btn-cart:hover { background-color: #1a252f; }
+        .btn-3d { background-color: #3498db; color: white; flex: 1; }
+        .btn-3d:hover { background-color: #2980b9; }
+        
+        /* Janela Modal do 3D (Escondida por defeito) */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+        .modal-content { background-color: #fff; margin: 5% auto; padding: 20px; border-radius: 10px; width: 90%; max-width: 600px; text-align: center; position: relative; }
+        .close-btn { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #333; font-weight: bold; }
+        
+        /* O Visualizador 3D em si */
+        model-viewer { width: 100%; height: 400px; background-color: #f9f9f9; border-radius: 8px; outline: none; }
+    </style>
 </head>
 <body>
 
-    <!-- CAIXA DO VISUALIZADOR -->
-    <div id="caixa-modal" class="modal">
-        <div class="modal-content">
-            
-            <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala.</p>
-            
-            <img id="qr-image" src="" alt="Código QR">
-            
-            <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
+    <!-- PÁGINA DO PRODUTO -->
+    <div class="product-container">
+        <!-- Fotografia estática da cadeira -->
+        <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=600&q=80" alt="Foto da Cadeira">
         </div>
         
-        <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
-        <button id="btn-qr-desktop" class="btn-floating">
-            VER NO SMARTPHONE
-        </button>
-
-        <!-- O MOTOR 3D -->
-        <!-- AGORA APONTA DIRETAMENTE PARA O TEU FICHEIRO (Sem bloqueios de segurança) -->
-        <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira de Teste Oficial"></model-viewer>
-
+        <!-- Informação e Botões -->
+        <div class="product-details">
+            <h1 class="product-title">Cadeira Nórdica Moderna</h1>
+            <p class="price">€ 199,00</p>
+            <p class="description">Uma cadeira de design ergonómico, perfeita para a sua sala de estar ou escritório. Acabamentos em madeira de carvalho e tecido resistente. Veja como fica no seu espaço.</p>
+            
+            <div class="buttons">
+                <button class="btn btn-cart">Adicionar ao Carrinho</button>
+                <button id="btn-abrir-3d" class="btn btn-3d">Ver em 3D</button>
+            </div>
+        </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- JANELA DO MOTOR 3D (Abre apenas quando o cliente clica em "Ver em 3D") -->
+    <div id="caixa-modal" class="modal">
+        <div class="modal-content">
+            <span id="btn-fechar-3d" class="close-btn">&times;</span>
+            <h2 style="margin-top: 0;">Visualizador Interativo</h2>
+            <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Use os dedos ou o rato para rodar a cadeira. No telemóvel, clique no botão para ver no seu espaço real.</p>
+            
+            <!-- MOTOR 3D CORRIGIDO (Tudo numa linha e a puxar a tua cadeira.glb) -->
+            <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira em 3D"></model-viewer>
+        </div>
+    </div>
+
+    <!-- LÓGICA DOS BOTÕES -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
-        const modal = document.getElementById('modal-3d');
-        const caixaModal = document.getElementById('caixa-modal');
-        
-        const btnQrDesktop = document.getElementById('btn-qr-desktop');
+        const modal = document.getElementById('caixa-modal');
+
+        // Abre a janela 3D
+        btnAbrir.onclick = function() {
+            modal.style.display = 'block';
+        }
+
+        // Fecha a janela 3D no X
+        btnFechar.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Fecha a janela se clicar fora da caixa branca
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>
