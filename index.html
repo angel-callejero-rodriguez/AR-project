@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visualizador AR - Portfólio</title>
-    <!-- Liga o ficheiro CSS -->
+    <title>AR-project</title>
     <link rel="stylesheet" href="style.css">
     
-    <!-- O Script Oficial da Google para ler o 3D -->
+    <!-- O Script Oficial da Google para ler o 3D (necessário para funcionar no PC e Android) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
@@ -16,40 +15,32 @@
     <div id="caixa-modal" class="modal">
         <div class="modal-content">
             
-            <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala, ou clique no botão abaixo se já estiver no telemóvel.</p>
+            <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala.</p>
             
             <img id="qr-image" src="" alt="Código QR">
             
             <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
-            
-            <!-- O MOTOR 3D -->
-            <!-- Juntei tudo numa linha para evitar erros de leitura do HTML -->
-            <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira em 3D"></model-viewer>
-
         </div>
+        
+        <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
+        <button id="btn-qr-desktop" class="btn-floating">
+            VER NO SMARTPHONE
+        </button>
+
+        <!-- O MOTOR 3D -->
+        <!-- AGORA APONTA DIRETAMENTE PARA O TEU FICHEIRO (Sem bloqueios de segurança) -->
+        <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira de Teste Oficial"></model-viewer>
+
     </div>
 
-    <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
-    <button id="btn-qr-desktop" class="btn-floating">VER NO SMARTPHONE</button>
-
-    <!-- JAVASCRIPT BÁSICO DOS BOTÕES -->
+    <!-- JAVASCRIPT -->
     <script>
-        const btnAbrir = document.getElementById('btn-abrir-3d'); // Se tiveres este botão no CSS
-        const btnFechar = document.getElementById('btn-fechar-qr');
+        const btnAbrir = document.getElementById('btn-abrir-3d');
+        const btnFechar = document.getElementById('btn-fechar-3d');
+        const modal = document.getElementById('modal-3d');
         const caixaModal = document.getElementById('caixa-modal');
+        
         const btnQrDesktop = document.getElementById('btn-qr-desktop');
-
-        // Se tiveres um botão para abrir, descomenta a linha abaixo
-        // if(btnAbrir) btnAbrir.onclick = () => caixaModal.style.display = 'block';
-        
-        if(btnFechar) btnFechar.onclick = () => caixaModal.style.display = 'none';
-        
-        // Clica fora da caixa para fechar
-        window.onclick = function(event) {
-            if (event.target == caixaModal) {
-                caixaModal.style.display = "none";
-            }
-        }
     </script>
 </body>
 </html>
