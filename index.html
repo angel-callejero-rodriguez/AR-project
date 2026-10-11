@@ -3,45 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja Exemplo - Cadeira Vintage</title>
+    <title>Loja Exemplo - Cadeira de Escritório</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
     <!-- ESTILOS OBRIGATÓRIOS PARA O 3D FUNCIONAR -->
     <style>
-        /* 1. Regra absoluta para esconder as janelas */
-        .escondido { 
-            display: none !important; 
-        }
+        .escondido { display: none !important; }
 
-        /* 2. Fundo escuro do Pop-up */
         #modal-3d {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.85); z-index: 9999;
         }
 
-        /* Garante que o Pop-up fica centrado no ecrã quando é aberto */
         #modal-3d:not(.escondido) {
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* 3. A caixa branca principal que segura o modelo */
         #caixa-modal {
             background: white; padding: 20px; border-radius: 12px;
             width: 90%; max-width: 800px; position: relative;
         }
 
-        /* 4. O SEGREDO: O motor 3D precisa de tamanho físico para existir */
         model-viewer {
-            width: 100%; 
-            height: 60vh; /* Ocupa 60% do ecrã */
-            min-height: 400px; /* Mas nunca fica mais pequeno que 400px */
-            background-color: #f4f4f4; /* Fundo cinzento suave para o 3D */
-            border-radius: 8px;
+            width: 100%; height: 60vh; min-height: 400px;
+            background-color: #f4f4f4; border-radius: 8px;
         }
 
-        /* 5. Estética básica dos pop-ups do PC */
         .fechar-modal { position: absolute; top: -40px; right: 0; padding: 10px 15px; font-weight: bold; cursor: pointer; border: none; border-radius: 4px; background: white; }
         #qr-popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; text-align: center; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000; }
         #qr-image { display: block; margin: 20px auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px; }
@@ -57,14 +45,15 @@
     <!-- PÁGINA DA LOJA -->
     <div class="product-container">
         <div class="photo-wrapper">
-            <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" alt="Cadeira Amarela" class="product-photo">
+            <!-- Nova Foto a condizer com a cadeira de escritório preta -->
+            <img src="https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&w=800&q=80" alt="Cadeira de Escritório Preta" class="product-photo">
         </div>
 
         <div class="product-info">
-            <span class="brand">Coleção Exclusiva</span>
-            <h1>Cadeira Vintage Mostarda</h1>
-            <p class="price">450,00 €</p>
-            <p class="description">Um design intemporal com tecido premium e pernas em madeira de nogueira. Utilize a visualização em Realidade Aumentada para verificar como as proporções e o tecido se integram no seu espaço antes de encomendar.</p>
+            <span class="brand">Coleção Executiva</span>
+            <h1>Cadeira de Escritório Modern</h1>
+            <p class="price">229,00 €</p>
+            <p class="description">Ergonomia e design moderno. Esta cadeira com acabamentos em couro sintético preto e estrutura metálica garante conforto para longas horas de trabalho. Teste as dimensões no seu escritório com a nossa Realidade Aumentada.</p>
 
             <button id="btn-abrir-3d" class="btn-primary">VER EM 3D</button>
             <button class="btn-secondary">ADICIONAR AO CARRINHO</button>
@@ -84,12 +73,10 @@
                 <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
             </div>
 
-            <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
             <button id="btn-qr-desktop" class="btn-floating" style="margin-bottom: 15px; display: block; width: 100%; padding: 15px; cursor: pointer;">
                 VER NO SMARTPHONE
             </button>
 
-            <!-- O MOTOR 3D -->
             <model-viewer 
                 id="meu-modelo"
                 src="cadeira.glb" 
@@ -106,7 +93,7 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT ORIGINAL MANTIDO 100% INTACTO -->
+    <!-- JAVASCRIPT -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
@@ -119,7 +106,6 @@
         const qrImage = document.getElementById('qr-image');
         const modelo3D = document.getElementById('meu-modelo');
 
-        // Navegação Básica (PC)
         btnAbrir.addEventListener('click', () => modal.classList.remove('escondido'));
 
         btnFechar.addEventListener('click', () => {
@@ -129,7 +115,6 @@
 
         btnFecharQr.addEventListener('click', () => qrPopup.classList.add('escondido'));
 
-        // Lógica do QR Code
         btnQrDesktop.addEventListener('click', () => {
             qrPopup.classList.remove('escondido'); 
             const urlLimpa = window.location.origin + window.location.pathname;
@@ -137,7 +122,6 @@
             qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(linkTelemovel)}`;
         });
 
-        // Lógica do Telemóvel (Quando lê o QR Code)
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
 
@@ -156,17 +140,28 @@
                 caixaModal.style.borderRadius = '0';
                 caixaModal.style.padding = '0';
 
+                // Botão de Iniciar Câmara (Mudei a posição para não chocar com o de Voltar)
                 const btnIniciarCamara = document.createElement('button');
                 btnIniciarCamara.innerHTML = "INICIAR CÂMARA (AR)";
-                btnIniciarCamara.style.cssText = "position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 20px 40px; font-size: 15px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); letter-spacing: 1px;";
-
+                btnIniciarCamara.style.cssText = "position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); padding: 20px 40px; font-size: 15px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); letter-spacing: 1px;";
                 document.body.appendChild(btnIniciarCamara);
+
+                // NOVO BOTÃO DE VOLTAR ATRÁS
+                const btnVoltarAtras = document.createElement('button');
+                btnVoltarAtras.innerHTML = "← VOLTAR À LOJA";
+                btnVoltarAtras.style.cssText = "position: absolute; top: 20px; left: 20px; padding: 10px 15px; font-size: 14px; font-weight: bold; background: white; color: #333; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.2);";
+                document.body.appendChild(btnVoltarAtras);
+
+                // O que o botão de voltar faz: limpa o link e recarrega a página normal da loja
+                btnVoltarAtras.addEventListener('click', () => {
+                    const urlLimpa = window.location.origin + window.location.pathname;
+                    window.location.href = urlLimpa; 
+                });
 
                 btnIniciarCamara.addEventListener('click', () => {
                     modelo3D.activateAR(); 
                 });
                 
-                // Força o model-viewer a preencher todo o ecrã do telemóvel
                 modelo3D.style.height = '100vh';
                 modelo3D.style.borderRadius = '0';
             }
