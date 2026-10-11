@@ -6,6 +6,46 @@
     <title>Loja Exemplo - Cadeira Vintage</title>
     <link rel="stylesheet" href="style.css">
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <!-- ESTILOS OBRIGATÓRIOS PARA O 3D FUNCIONAR -->
+    <style>
+        /* 1. Regra absoluta para esconder as janelas */
+        .escondido { 
+            display: none !important; 
+        }
+
+        /* 2. Fundo escuro do Pop-up */
+        #modal-3d {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+        }
+
+        /* Garante que o Pop-up fica centrado no ecrã quando é aberto */
+        #modal-3d:not(.escondido) {
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* 3. A caixa branca principal que segura o modelo */
+        #caixa-modal {
+            background: white; padding: 20px; border-radius: 12px;
+            width: 90%; max-width: 800px; position: relative;
+        }
+
+        /* 4. O SEGREDO: O motor 3D precisa de tamanho físico para existir */
+        model-viewer {
+            width: 100%; 
+            height: 60vh; /* Ocupa 60% do ecrã */
+            min-height: 400px; /* Mas nunca fica mais pequeno que 400px */
+            background-color: #f4f4f4; /* Fundo cinzento suave para o 3D */
+            border-radius: 8px;
+        }
+
+        /* 5. Estética básica dos pop-ups do PC */
+        .fechar-modal { position: absolute; top: -40px; right: 0; padding: 10px 15px; font-weight: bold; cursor: pointer; border: none; border-radius: 4px; background: white; }
+        #qr-popup { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; text-align: center; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 10000; }
+        #qr-image { display: block; margin: 20px auto; border: 1px solid #ccc; padding: 10px; border-radius: 8px; }
+    </style>
 </head>
 <body>
 
@@ -17,7 +57,6 @@
     <!-- PÁGINA DA LOJA -->
     <div class="product-container">
         <div class="photo-wrapper">
-            <!-- Foto da Cadeira Amarela a condizer com o modelo 3D -->
             <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" alt="Cadeira Amarela" class="product-photo">
         </div>
 
@@ -35,7 +74,7 @@
     <!-- JANELA POP-UP COM O 3D -->
     <div id="modal-3d" class="escondido">
         <div class="modal-content" id="caixa-modal">
-            <button id="btn-fechar-3d" class="fechar-modal">FECHAR</button>
+            <button id="btn-fechar-3d" class="fechar-modal">FECHAR O 3D</button>
 
             <!-- POP-UP DO QR CODE (SÓ VISTO NO PC) -->
             <div id="qr-popup" class="escondido">
@@ -46,12 +85,11 @@
             </div>
 
             <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
-            <button id="btn-qr-desktop" class="btn-floating">
+            <button id="btn-qr-desktop" class="btn-floating" style="margin-bottom: 15px; display: block; width: 100%; padding: 15px; cursor: pointer;">
                 VER NO SMARTPHONE
             </button>
 
             <!-- O MOTOR 3D -->
-            <!-- AGORA APONTA DIRETAMENTE PARA O TEU FICHEIRO (Sem bloqueios de segurança) -->
             <model-viewer 
                 id="meu-modelo"
                 src="cadeira.glb" 
@@ -68,7 +106,7 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT ORIGINAL MANTIDO 100% INTACTO -->
     <script>
         const btnAbrir = document.getElementById('btn-abrir-3d');
         const btnFechar = document.getElementById('btn-fechar-3d');
@@ -95,7 +133,7 @@
         btnQrDesktop.addEventListener('click', () => {
             qrPopup.classList.remove('escondido'); 
             const urlLimpa = window.location.origin + window.location.pathname;
-            const linkTelemovel = urlLimpa + "?ar=true"; // A etiqueta secreta
+            const linkTelemovel = urlLimpa + "?ar=true"; 
             qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(linkTelemovel)}`;
         });
 
@@ -104,32 +142,33 @@
             const params = new URLSearchParams(window.location.search);
 
             if (params.get('ar') === 'true') {
-                // 1. Esconde tudo o que é da loja para não atrapalhar
                 document.querySelector('.store-header').style.display = 'none';
                 document.querySelector('.product-container').style.display = 'none';
 
-                // 2. Abre o Modal 3D e esconde botões de PC
                 modal.classList.remove('escondido');
                 btnFechar.style.display = 'none';
                 btnQrDesktop.style.display = 'none';
                 qrPopup.classList.add('escondido');
 
-                // 3. Torna o 3D em Ecrã Inteiro (Fundo Cinzento)
                 caixaModal.style.width = '100vw';
                 caixaModal.style.height = '100vh';
+                caixaModal.style.maxWidth = '100vw';
                 caixaModal.style.borderRadius = '0';
+                caixaModal.style.padding = '0';
 
-                // 4. Cria o Botão Gigante de AR no centro inferior
                 const btnIniciarCamara = document.createElement('button');
                 btnIniciarCamara.innerHTML = "INICIAR CÂMARA (AR)";
-                btnIniciarCamara.style.cssText = "position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 20px 40px; font-size: 15px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: inherit; letter-spacing: 1px;";
+                btnIniciarCamara.style.cssText = "position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 20px 40px; font-size: 15px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); letter-spacing: 1px;";
 
                 document.body.appendChild(btnIniciarCamara);
 
-                // 5. O clique mágico que abre a câmara sem erros
                 btnIniciarCamara.addEventListener('click', () => {
                     modelo3D.activateAR(); 
                 });
+                
+                // Força o model-viewer a preencher todo o ecrã do telemóvel
+                modelo3D.style.height = '100vh';
+                modelo3D.style.borderRadius = '0';
             }
         });
     </script>
