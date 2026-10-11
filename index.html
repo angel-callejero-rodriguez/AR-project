@@ -3,124 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loja Exemplo - Cadeira Vintage</title>
+    <title>Visualizador AR - Portfólio</title>
+    <!-- Liga o ficheiro CSS -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- O Script Oficial da Google para ler o 3D -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <!-- CABEÇALHO DA LOJA -->
-    <header class="store-header">
-        <div class="logo">Loja Exemplo.</div>
-    </header>
-
-    <!-- PÁGINA DA LOJA -->
-    <div class="product-container">
-        <div class="photo-wrapper">
-            <!-- Foto da Cadeira Amarela a condizer com o modelo 3D -->
-            <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=800&q=80" alt="Cadeira Amarela" class="product-photo">
-        </div>
-        
-        <div class="product-info">
-            <span class="brand">Coleção Exclusiva</span>
-            <h1>Cadeira Vintage Mostarda</h1>
-            <p class="price">450,00 €</p>
-            <p class="description">Um design intemporal com tecido premium e pernas em madeira de nogueira. Utilize a visualização em Realidade Aumentada para verificar como as proporções e o tecido se integram no seu espaço antes de encomendar.</p>
+    <!-- CAIXA DO VISUALIZADOR -->
+    <div id="caixa-modal" class="modal">
+        <div class="modal-content">
             
-            <button id="btn-abrir-3d" class="btn-primary">VER EM 3D</button>
-            <button class="btn-secondary">ADICIONAR AO CARRINHO</button>
-        </div>
-    </div>
-
-    <!-- JANELA POP-UP COM O 3D -->
-    <div id="modal-3d" class="escondido">
-        <div class="modal-content" id="caixa-modal">
-            <button id="btn-fechar-3d" class="fechar-modal">FECHAR</button>
+            <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala, ou clique no botão abaixo se já estiver no telemóvel.</p>
             
-            <!-- POP-UP DO QR CODE (SÓ VISTO NO PC) -->
-            <div id="qr-popup" class="escondido">
-                <h2>VISUALIZAÇÃO NO ESPAÇO</h2>
-                <p>Leia o código com a câmara do seu smartphone para colocar o objeto na sua sala.</p>
-                <img id="qr-image" src="" alt="Código QR">
-                <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
-            </div>
-
-            <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
-            <button id="btn-qr-desktop" class="btn-floating">
-                VER NO SMARTPHONE
-            </button>
+            <img id="qr-image" src="" alt="Código QR">
+            
+            <button id="btn-fechar-qr" class="btn-text">Voltar ao Visualizador</button>
             
             <!-- O MOTOR 3D -->
-            <!-- AGORA APONTA DIRETAMENTE PARA O TEU FICHEIRO (Sem bloqueios de segurança) -->
-            <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira de Teste Oficial"></model-viewer>
+            <!-- Juntei tudo numa linha para evitar erros de leitura do HTML -->
+            <model-viewer id="meu-modelo" src="cadeira.glb" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls shadow-intensity="1.5" environment-image="neutral" auto-rotate alt="Cadeira em 3D"></model-viewer>
+
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- BOTÃO PARA ABRIR O QR CODE (PC) -->
+    <button id="btn-qr-desktop" class="btn-floating">VER NO SMARTPHONE</button>
+
+    <!-- JAVASCRIPT BÁSICO DOS BOTÕES -->
     <script>
-        const btnAbrir = document.getElementById('btn-abrir-3d');
-        const btnFechar = document.getElementById('btn-fechar-3d');
-        const modal = document.getElementById('modal-3d');
+        const btnAbrir = document.getElementById('btn-abrir-3d'); // Se tiveres este botão no CSS
+        const btnFechar = document.getElementById('btn-fechar-qr');
         const caixaModal = document.getElementById('caixa-modal');
-        
         const btnQrDesktop = document.getElementById('btn-qr-desktop');
-        const qrPopup = document.getElementById('qr-popup');
-        const btnFecharQr = document.getElementById('btn-fechar-qr');
-        const qrImage = document.getElementById('qr-image');
-        const modelo3D = document.getElementById('meu-modelo');
 
-        // Navegação Básica (PC)
-        btnAbrir.addEventListener('click', () => modal.classList.remove('escondido'));
+        // Se tiveres um botão para abrir, descomenta a linha abaixo
+        // if(btnAbrir) btnAbrir.onclick = () => caixaModal.style.display = 'block';
         
-        btnFechar.addEventListener('click', () => {
-            modal.classList.add('escondido');
-            qrPopup.classList.add('escondido'); 
-        });
+        if(btnFechar) btnFechar.onclick = () => caixaModal.style.display = 'none';
         
-        btnFecharQr.addEventListener('click', () => qrPopup.classList.add('escondido'));
-
-        // Lógica do QR Code
-        btnQrDesktop.addEventListener('click', () => {
-            qrPopup.classList.remove('escondido'); 
-            const urlLimpa = window.location.origin + window.location.pathname;
-            const linkTelemovel = urlLimpa + "?ar=true"; // A etiqueta secreta
-            qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(linkTelemovel)}`;
-        });
-
-        // Lógica do Telemóvel (Quando lê o QR Code)
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            
-            if (params.get('ar') === 'true') {
-                // 1. Esconde tudo o que é da loja para não atrapalhar
-                document.querySelector('.store-header').style.display = 'none';
-                document.querySelector('.product-container').style.display = 'none';
-                
-                // 2. Abre o Modal 3D e esconde botões de PC
-                modal.classList.remove('escondido');
-                btnFechar.style.display = 'none';
-                btnQrDesktop.style.display = 'none';
-                qrPopup.classList.add('escondido');
-                
-                // 3. Torna o 3D em Ecrã Inteiro (Fundo Cinzento)
-                caixaModal.style.width = '100vw';
-                caixaModal.style.height = '100vh';
-                caixaModal.style.borderRadius = '0';
-                
-                // 4. Cria o Botão Gigante de AR no centro inferior
-                const btnIniciarCamara = document.createElement('button');
-                btnIniciarCamara.innerHTML = "INICIAR CÂMARA (AR)";
-                btnIniciarCamara.style.cssText = "position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); padding: 20px 40px; font-size: 15px; font-weight: 600; background: #000; color: #fff; border: none; border-radius: 8px; cursor: pointer; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.3); font-family: inherit; letter-spacing: 1px;";
-                
-                document.body.appendChild(btnIniciarCamara);
-
-                // 5. O clique mágico que abre a câmara sem erros
-                btnIniciarCamara.addEventListener('click', () => {
-                    modelo3D.activateAR(); 
-                });
+        // Clica fora da caixa para fechar
+        window.onclick = function(event) {
+            if (event.target == caixaModal) {
+                caixaModal.style.display = "none";
             }
-        });
+        }
     </script>
 </body>
 </html>
-
